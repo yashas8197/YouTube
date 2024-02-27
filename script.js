@@ -1,14 +1,12 @@
-const CLIENT_ID = '361774530751-6s2h5e7nf5o7oqnel5fao83g7huojmir.apps.googleusercontent.com'
+const CLIENT_ID = '356903753367-skqlbgop0vi2upp142lq1rjuescdpnr7.apps.googleusercontent.com'
 
-const DISCOVERY_ID = ['https://www.googleapis.com/discovery/v1/apis/plus/v1/rest'];
+const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"];
 
 // const SCOPES = 'https://www.googleapis.com/auth/calendar';
 const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly';
 
-
 const authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
-
 const content = document.getElementById('content');
 const channelForm = document.getElementById('channel-form');
 const ChannelInput = document.getElementById('channel-input');
@@ -24,17 +22,18 @@ function handleClientLoad() {
 //Init API client library and set up sign in listener
 function initClient() {
     gapi.client.init({
-        discoveryDocs: DISCOVERY_ID,
+        discoveryDocs: DISCOVERY_DOCS,
         clientId: CLIENT_ID,
         scope: SCOPES
-    }).then(function () {
+    }).then(() => {
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+      // Handle the initial sign-in state.
+      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      authorizeButton.onclick = handleAuthClick;
+      signoutButton.onclick = handleSignoutClick;
     });
-     // Handle the initial sign-in state.
-     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-     authorizeButton.onclick = handleAuthClick;
-     signoutButton.onclick = handleSignoutClick;
+     
 }
 
 //Update Signin state changes
@@ -57,7 +56,7 @@ function updateSigninStatus(isSignedIn) {
 
 function handleAuthClick(event) {
  gapi.auth2.getAuthInstance().signIn();
-}
+}   
 
 //Handel Logout
 function handleSignoutClick(event) {
